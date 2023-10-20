@@ -4,22 +4,26 @@ import TommasoEleodori.entities.enums.Genre;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 @DiscriminatorValue("book")
 public class Book extends Lecture {
     private String author;
+    @Enumerated(EnumType.STRING)
     private Genre genre;
 
     public Book() {
     }
 
-    public Book(String author, Genre genre) {
-        super();
-        if (author != null || author.trim().isEmpty() || genre != null) {
+    public Book(String title, int publicationYear, int pagesNumber, String author, Genre genre) {
+        super(title, publicationYear, pagesNumber);
+        if (author != null && !author.trim().isEmpty() && genre != null) {
             this.author = author;
             this.genre = genre;
-        }
+        } else throw new IllegalArgumentException("the values can't be null or empty");
+
     }
 
     public String getAuthor() {

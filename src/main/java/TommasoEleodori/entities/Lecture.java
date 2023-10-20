@@ -1,7 +1,7 @@
 package TommasoEleodori.entities;
 
 import javax.persistence.*;
-import java.time.Year;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -13,20 +13,27 @@ public abstract class Lecture {
     @GeneratedValue
     private UUID ibsn;
     private String title;
+
     @Column(name = "publication_year")
-    private Year publicationYear;
+    private int publicationYear;
     @Column(name = "pages_number")
     private int pagesNumber;
 
-    public Lecture(){}
-    public Lecture(String title, Year publicationYear, int pagesNumber){
-        if( title != null || title.trim().isEmpty() || publicationYear != null ||
-                pagesNumber < 0){
+    @OneToMany(mappedBy = "lecture")
+    private Set<Loan> loans;
+
+    public Lecture() {
+    }
+
+    public Lecture(String title, int publicationYear, int pagesNumber) {
+        if (title != null && !title.trim().isEmpty() && publicationYear >= 0 &&
+                pagesNumber >= 0) {
             this.title = title;
             this.publicationYear = publicationYear;
             this.pagesNumber = pagesNumber;
         } else throw new IllegalArgumentException("the values can't be null, empty or less than 0");
     }
+
 
     public UUID getIbsn() {
         return ibsn;
@@ -41,11 +48,11 @@ public abstract class Lecture {
         this.title = title;
     }
 
-    public Year getPublicationYear() {
+    public int getPublicationYear() {
         return publicationYear;
     }
 
-    public void setPublicationYear(Year publicationYear) {
+    public void setPublicationYear(int publicationYear) {
         this.publicationYear = publicationYear;
     }
 
@@ -55,6 +62,14 @@ public abstract class Lecture {
 
     public void setPagesNumber(int pagesNumber) {
         this.pagesNumber = pagesNumber;
+    }
+
+    public Set<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(Set<Loan> loans) {
+        this.loans = loans;
     }
 
     @Override
